@@ -1,17 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<title>ANP Decision Making</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<link
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+			rel="stylesheet" />
 	</head>
 	<body>
-		<h1>ANP Decision Making</h1>
-		<form id="anp-form">
-			<button type="submit">Calculate</button>
-		</form>
+		<div class="container mt-5">
+			<h1 class="text-center mb-4">ANP Decision Making</h1>
+			<form
+				id="anp-form"
+				class="mb-4">
+				<div class="form-group">
+					<button
+						type="submit"
+						class="btn btn-primary btn-block">
+						Calculate
+					</button>
+				</div>
+			</form>
+			<button
+				id="show-data"
+				class="btn btn-secondary btn-block mb-4">
+				Show Raw Data
+			</button>
+			<div
+				id="result"
+				class="alert alert-info"
+				style="display: none"></div>
+			<div
+				id="raw-data"
+				class="alert alert-secondary"
+				style="display: none"></div>
+		</div>
 
-		<div id="result"></div>
-
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 		<script>
 			$("#anp-form").on("submit", function (event) {
 				event.preventDefault();
@@ -19,9 +47,50 @@
 					url: "/calculate",
 					method: "POST",
 					success: function (response) {
-						$("#result").html(
-							"<h2>Result:</h2><p>" + JSON.stringify(response) + "</p>",
-						);
+						$("#result")
+							.html(
+								"<h4>Result:</h4><pre>" +
+									JSON.stringify(response, null, 2) +
+									"</pre>",
+							)
+							.show();
+					},
+					error: function () {
+						$("#result")
+							.html('<p class="text-danger">An error occurred.</p>')
+							.show();
+					},
+				});
+			});
+
+			$("#show-data").on("click", function () {
+				$.ajax({
+					url: "/data",
+					method: "GET",
+					success: function (response) {
+						let table = '<table class="table table-bordered"><thead><tr>';
+						for (const key of Object.keys(response[0])) {
+							table += `<th>${key}</th>`;
+						}
+						table += "</tr></thead><tbody>";
+						response.forEach((row) => {
+							table += "<tr>";
+							for (const key in row) {
+								table += `<td>${row[key]}</td>`;
+							}
+							table += "</tr>";
+						});
+						table += "</tbody></table>";
+						$("#raw-data")
+							.html("<h4>Raw Data:</h4>" + table)
+							.show();
+					},
+					error: function () {
+						$("#raw-data")
+							.html(
+								'<p class="text-danger">An error occurred while fetching the raw data.</p>',
+							)
+							.show();
 					},
 				});
 			});

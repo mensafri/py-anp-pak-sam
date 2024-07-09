@@ -21,18 +21,15 @@ def index():
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
-    # Menggunakan data dari Kaggle yang sudah diunduh
     data = pd.read_csv('data/raw_data.csv')
     mean_income = data['Annual Income (k$)'].mean()
     mean_spending = data['Spending Score (1-100)'].mean()
 
-    # Matriks perbandingan berpasangan
     criteria_matrix = np.array([
         [1, mean_income / mean_spending],
         [mean_spending / mean_income, 1]
     ])
 
-    # Menghitung Prioritas
     criteria_priority = calculate_priority(criteria_matrix)
 
     result = {
@@ -42,3 +39,9 @@ def calculate():
     }
 
     return jsonify(result)
+
+
+@app.route('/data', methods=['GET'])
+def data():
+    data = pd.read_csv('data/raw_data.csv')
+    return jsonify(data.to_dict(orient='records'))
