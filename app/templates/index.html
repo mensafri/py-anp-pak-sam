@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ANP Decision Making</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<h1>ANP Decision Making</h1>
+		<form id="anp-form">
+			<button type="submit">Calculate</button>
+		</form>
+
+		<div id="result"></div>
+
+		<script>
+			$("#anp-form").on("submit", function (event) {
+				event.preventDefault();
+				$.ajax({
+					url: "/calculate",
+					method: "POST",
+					success: function (response) {
+						$("#result").html(
+							"<h2>Result:</h2><p>" + JSON.stringify(response) + "</p>",
+						);
+					},
+				});
+			});
+		</script>
+	</body>
+</html>

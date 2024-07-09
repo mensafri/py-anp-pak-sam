@@ -1,0 +1,17 @@
+/* style.css */
+/* Tambahkan CSS yang diperlukan untuk styling */
+body {
+	font-family: Arial, sans-serif;
+}
+
+h1 {
+	color: #333;
+}
+
+form {
+	margin-bottom: 20px;
+}
+
+#result {
+	margin-top: 20px;
+}
